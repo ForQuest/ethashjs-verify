@@ -1,0 +1,30 @@
+{
+  "name": "ethashjs-verify",
+  "version": "0.0.1",
+  "description": "Verify submit function for ethashjs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ForQuest/ethashjs-verify.git"
+  },
+  "keywords": [
+    "ethereum"
+  ],
+  "author": "ForQuest Dev LLC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ForQuest/ethashjs-verify/issues"
+  },
+  "homepage": "https://github.com/ForQuest/ethashjs-verify#readme",
+  "dependencies": {
+    "async": "^2.5.0",
+    "buffer-xor": "^2.0.2",
+    "ethashjs": "^0.0.7",
+    "ethereumjs-util": "^5.1.2",
+    "levelup": "^1.3.9",
+    "memdown": "^1.3.1"
+  }
+}
