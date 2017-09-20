@@ -21,8 +21,6 @@
   },
   "homepage": "https://github.com/ForQuest/ethashjs-verify#readme",
   "dependencies": {
-    "async": "^2.5.0",
-    "buffer-xor": "^2.0.2",
     "ethashjs": "^0.0.7",
     "ethereumjs-util": "^5.1.2",
     "levelup": "^1.3.9",

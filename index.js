@@ -1,58 +1,41 @@
-const Ethash = require('ethashjs')
-const levelup = require('levelup')
-const memdown = require('memdown')
-const ethUtil = require('ethereumjs-util')
-const xor = require('buffer-xor')
-const BN = ethUtil.BN
-const async = require('async')
+const Ethash = require('ethashjs');
+const levelup = require('levelup');
+const memdown = require('memdown');
+const ethUtil = require('ethereumjs-util');
+const BN = ethUtil.BN;
 
 
-Ethash.prototype.verifySubmit = function (block, difficulty, target) {
-  var self = this
+Ethash.prototype.verifySubmit = function (block, difficulty, totalDiff, cb) {
+  var self = this;
   var result = {
     share: false,
     block: false
   }
-  //console.log(block);
+
   var targetM = (new BN(2).pow(new BN(256))).divRound(new BN(difficulty, 16));
-  this.loadEpoc(block.height, function () {
-    console.log("Epoc loaded!");
+  var target = (new BN(2).pow(new BN(256))).divRound(new BN(totalDiff, 16));
+  this.loadEpoc(new BN(block.height), function () {
     var a = self.run(new Buffer(block.header, 'hex'), new Buffer(block.nonce, 'hex'));
-      if(block.mixDigest.toString('hex') === a.mix.toString('hex')) {
-        if(new BN(a.mix, 16) < new BN(targetM, 16)) {
-          console.log("Share is valid");
-          result.share = true; 
-          if(new BN(a.mix, 16) < new BN(target, 16)){
-            console.log("Block founded!");
-            result.block = true;
-          }
+    if(block.mixDigest.toString('hex') === a.mix.toString('hex')) {
+      if(new BN(a.mix, 16) < new BN(targetM, 16)) {
+        result.share = true; 
+        if(new BN(a.mix, 16) < new BN(target, 16)){
+          result.block = true;
         }
-        else {
-          console.log("Hash is invalid");
-        } 
       }
-      else { 
-        console.log("Error. Computed hash is not equal for the mixDigest");
-      }
-    console.log("mixDigest: " + block.mixDigest.toString('hex'));
-    console.log("mix: " + a.mix.toString('hex'));
-    return result;
+    }
+    return cb(result);
   });
 }
 
-var cacheDB = levelup('', {
-  db: memdown
-})
+var VerifySubmit = module.exports = function(block, diff, tg, callback){
+  var cacheDB = levelup('', {
+    db: memdown
+  })
 
-var ethash = new Ethash(cacheDB)
+  var ethash = new Ethash(cacheDB);
 
-var block = {
-  height: 4292800,
-  header: "4a7ef9c723dd8e855112c6d17908a8355746190734bbb13ee9d67ac340d8b68e",
-  nonce: "886c9737600fe186af",
-  mixDigest: "87893165f75662df9d3a0f73fdee06ea451b95c9c41bbad17df6e9175f5d3a1d"
+  ethash.verifySubmit(block, diff, tg, function(result){
+    callback(result);
+  });
 }
-var diff = "8a4f5443f6039";
-var totalDiff = "34e6c82cf5d15464c8";
-var tg = (new BN(2).pow(new BN(256))).divRound(new BN(totalDiff, 16));
-ethash.verifySubmit(block, diff, tg);
