@@ -16,7 +16,7 @@ Ethash.prototype.verifySubmit = function (block, difficulty, totalDiff, cb) {
   var targetM = (new BN(2).pow(new BN(256))).divRound(new BN(difficulty, 16));
   var target = (new BN(2).pow(new BN(256))).divRound(new BN(totalDiff, 16));
   this.loadEpoc(block.height, function () {
-    var a = self.run(new Buffer(block.header, 'hex'), new Buffer(block.nonce, 'hex'));
+    var a = self.run(new Buffer(block.header, 'hex'), new Buffer(block.nonce, 'hex'), self.fullSize);
     if(block.mixDigest.toString('hex') === a.mix.toString('hex')) {
       if(new BN(a.mix, 16) < new BN(targetM, 16)) {
         result.share = true; 
