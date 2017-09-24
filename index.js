@@ -1,6 +1,7 @@
 const Ethash = require('ethashjs');
 const levelup = require('levelup');
 const memdown = require('memdown');
+const events = require('events');
 const ethUtil = require('ethereumjs-util');
 const BN = ethUtil.BN;
 
@@ -28,14 +29,31 @@ Ethash.prototype.verifySubmit = function (block, difficulty, totalDiff, cb) {
   });
 }
 
-var VerifySubmit = module.exports = function(block, diff, tg, callback){
-  var cacheDB = levelup('', {
-    db: memdown
-  })
+var VerifySubmit = module.exports = function(){
+  var _this = this;
 
-  var ethash = new Ethash(cacheDB);
+  this.init = function(height) {
+    var cacheDB = levelup('', {
+      db: memdown
+    })
 
-  ethash.verifySubmit(block, diff, tg, function(result){
-    callback(result);
-  });
+    _this.ethash = new Ethash(cacheDB);
+    _this.ethash.loadEpoc(height, function () {
+      _this.emit('DAG');
+    });
+  }
+
+  this.updateEpoc = function(height) {
+    _this.ethash.loadEpoc(height, function () {
+      _this.emit('DAG');
+    });
+  }
+
+  this.submitShare = function(block, diff, tg, callback){
+    _this.ethash.verifySubmit(block, diff, tg, function(result){
+      callback(result);
+    });
+  }
 }
+
+VerifySubmit.prototype.__proto__ = events.EventEmitter.prototype;

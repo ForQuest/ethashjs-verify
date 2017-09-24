@@ -23,6 +23,7 @@
   "dependencies": {
     "ethashjs": "^0.0.7",
     "ethereumjs-util": "^5.1.2",
+    "events": "^1.1.1",
     "levelup": "^1.3.9",
     "memdown": "^1.3.1"
   }
