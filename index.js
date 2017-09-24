@@ -1,4 +1,4 @@
-const Ethash = require('ethashjs');
+const Ethash = require('node-ethash');
 const levelup = require('levelup');
 const memdown = require('memdown');
 const events = require('events');
