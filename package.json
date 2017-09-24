@@ -21,10 +21,10 @@
   },
   "homepage": "https://github.com/ForQuest/ethashjs-verify#readme",
   "dependencies": {
-    "node-ethash": "^0.0.7",
     "ethereumjs-util": "^5.1.2",
     "events": "^1.1.1",
     "levelup": "^1.3.9",
-    "memdown": "^1.3.1"
+    "memdown": "^1.3.1",
+    "node-ethash": "git+https://github.com/ethereumjs/node-ethash.git"
   }
 }
