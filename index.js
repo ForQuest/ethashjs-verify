@@ -18,9 +18,9 @@ Ethash.prototype.verifySubmit = function (block, difficulty, totalDiff, cb) {
   this.loadEpoc(block.height, function () {
     var a = self.run(new Buffer(block.header, 'hex'), new Buffer(block.nonce, 'hex'), self.fullSize);
     if(block.mixDigest.toString('hex') === a.mix.toString('hex')) {
-      if(bignum(a.hash, 16).cmp(targetM) === -1) {
+      if(bignum(a.hash.toString('hex'), 16).cmp(targetM) === -1) {
         result.share = true; 
-        if(bignum(a.hash, 16).cmp(target, 16) === -1){
+        if(bignum(a.hash.toString('hex'), 16).cmp(target) === -1){
           result.block = true;
         }
       }
