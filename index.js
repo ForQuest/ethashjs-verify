@@ -29,9 +29,9 @@ Ethash.prototype.verifySubmit = function (block, difficulty, totalDiff, cb) {
   });
 }
 
-var VerifySubmit = module.exports = function(){
+var VerifySubmit = module.exports = function(){ 
   var _this = this;
-
+  this.ready = false;
   this.init = function(height) {
     var cacheDB = levelup('', {
       db: memdown
@@ -39,12 +39,15 @@ var VerifySubmit = module.exports = function(){
 
     _this.ethash = new Ethash(cacheDB);
     _this.ethash.loadEpoc(height, function () {
+      _this.ready = true;
       _this.emit('DAG');
     });
   }
 
   this.updateEpoc = function(height) {
+    _this.ready = false;
     _this.ethash.loadEpoc(height, function () {
+      _this.ready = true;
       _this.emit('DAG');
     });
   }
